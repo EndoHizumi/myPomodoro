@@ -1,38 +1,38 @@
 <template>
   <div id="app">
-    <countdown :left-time="60000" :auto-start="false" ref="cnt">
-      <div
-      slot="before"
-      >
-      00:00
-      </div>
-      <div
-        slot="process"
-        slot-scope="anyYouWantedScopName"
-       >      {{ `${anyYouWantedScopName.timeObj.m}:${anyYouWantedScopName.timeObj.s}` }}</div>
-      <div slot="finish" style="color: red;">
-          00:00
-      </div>
-    </countdown>
-    <button @click="doRestart">スタート</button>
-    <button @click="doStop">ストップ</button>
-    <button @click="doSwitch">[再開]ー[一時停止]</button>
+    <timer startTime="180" v-bind:state="state" ref="timer"></timer>
+    <button v-on:click="startTimer" v-if="state == 'stop'">start</button>
+    <button v-on:click="startTimer" v-if="state == 'pause'">restart</button>
+    <button v-on:click="pauseTimer" v-if="state == 'process'">pause</button>
+    <button v-on:click="stopTimer" v-if="state == 'process'">stop</button>
   </div>
 </template>
 
 <script>
+import timer from './components/timer'
 export default {
   name: "App",
-  methods: {
-    doRestart: function() {
-      this.$refs.cnt.startCountdown(true);
-    },
-    doStop: function() {
-      this.$refs.cnt.stopCountdown();
-    },
-    doSwitch: function() {
-      this.$refs.cnt.switchCountdown();
+  data: function(){
+    return{
+      state:"stop"
     }
+  },
+  components:{
+    timer
+  },
+  methods: {
+   startTimer: function() {
+     this.state = "process"
+     this.$refs.timer.startTimer()
+   },
+   stopTimer: function() {
+     this.state = "stop"
+     this.$refs.timer.stopTimer()
+   },
+   pauseTimer: function() {
+     this.state = "pause"
+     this.$refs.timer.pauseTimer()
+   },
   }
 };
 </script>
@@ -47,9 +47,8 @@ export default {
   margin-top: 60px;
 }
 
-#app > span > div {
-    font-weight: bold;
-    font-size: 1000%;
+#app > span > div > span {
+  font-weight: bold;
+  font-size: 1000%;
 }
-
 </style>
