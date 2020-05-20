@@ -1,15 +1,19 @@
 <template>
-    <div id="display">{{this.display_hour}}:{{this.display_minute}}:{{this.display_second}}</div>
+    <div id="display">
+      <span id="name">{{this.name}}</span>
+      <span id="timer" v-bind:class=state>{{this.display_hour}}:{{this.display_minute}}:{{this.display_second}}</span>
+    </div>
 </template>
 <script>
 export default {
   data: function() {
     return {
       timer: null,
-      pickTime: 0
+      pickTime: 0,
     };
   },
   props:{
+      name: String,
       state: String,
       startTime: String
   },
@@ -35,15 +39,14 @@ export default {
       if(this.state == "process"){
           return
       }
-      if(this.pickTime == 0){
-          this.pickTime = parseInt(this.startTime);
+      if (this.state == 'stop' || this.state == 'finish'){
+        this.pickTime = parseInt(this.startTime);
       }
       this.timer = setInterval(() => this.countdown(), 1000);
     },
     stopTimer: function() {
       clearInterval(this.timer);
       this.timer = null;
-      this.pickTime = this.startTime;
     },
     pauseTimer: function() {
       clearInterval(this.timer);
@@ -52,11 +55,12 @@ export default {
       return (time < 10 ? "0" : "") + time;
     },
     countdown: function() {
-        if(this.pickTime > 0){
+        if(this.pickTime > 1){
             this.pickTime--;
         }else{
             this.pickTime = 0
             this.stopTimer()
+            this.$emit('finish')
         }
     }
   }
@@ -64,8 +68,25 @@ export default {
 </script>
 
 <style>
-#display{
+#name{
+  display: inline-block;
+  font-weight: bold;
+  font-size: 300%
+}
+
+#timer{
     font-weight: bold;
-    font-size: 500%;
+    font-size: 600%;
+    display:inline-block;
+}
+
+@keyframes blink {
+  75% { opacity: 0.0; }
+}
+
+.finish {
+  /* text-decoration: blink; の代わりに以下の指定を入れる */
+  color: red;
+  animation: blink 0.8s step-end infinite;
 }
 </style>

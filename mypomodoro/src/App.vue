@@ -1,38 +1,69 @@
 <template>
   <div id="app">
-    <timer startTime="180" v-bind:state="state" ref="timer"></timer>
-    <button v-on:click="startTimer" v-if="state == 'stop'">start</button>
+    <timer v-bind:name="name" v-bind:startTime="time" v-bind:state="state" ref="timer" v-on:finish="next"></timer>
+    <button v-on:click="startTimer" v-if="state == 'stop' || state == 'finish'">start</button>
     <button v-on:click="startTimer" v-if="state == 'pause'">restart</button>
     <button v-on:click="pauseTimer" v-if="state == 'process'">pause</button>
-    <button v-on:click="stopTimer" v-if="state == 'process'">stop</button>
+    <button v-on:click="stopTimer" v-if="state == 'pause' || state == 'finish'">finish</button>
   </div>
 </template>
 
 <script>
-import timer from './components/timer'
+import timer from "./components/timer";
 export default {
   name: "App",
-  data: function(){
-    return{
-      state:"stop"
-    }
+  data: function() {
+    return {
+      state: "stop",
+      time: "00",
+      pattern: [],
+      position: 0,
+    };
   },
-  components:{
+  components: {
     timer
   },
   methods: {
-   startTimer: function() {
-     this.state = "process"
-     this.$refs.timer.startTimer()
-   },
-   stopTimer: function() {
-     this.state = "stop"
-     this.$refs.timer.stopTimer()
-   },
-   pauseTimer: function() {
-     this.state = "pause"
-     this.$refs.timer.pauseTimer()
-   },
+    startTimer: function() {
+      this.state = "process";
+      this.name = this.pattern[this.position]['name'];
+      this.$refs.timer.startTimer();
+    },
+    stopTimer: function() {
+      this.state = "stop";
+      this.position = 0
+      this.name = this.pattern[this.position]['name'];
+      this.time = this.pattern[this.position]["time"];
+      this.$refs.timer.stopTimer();
+    },
+    pauseTimer: function() {
+      this.state = "pause";
+      this.$refs.timer.pauseTimer();
+    },
+    next: function() {
+      this.state = "finish"
+      this.position += 1
+      if(this.position >= this.pattern.length){
+          this.position = 0
+      }
+      this.time = this.pattern[this.position]["time"];
+    }
+  },
+  created: function() {
+    this.pattern.push({
+      name: "Work1",
+      time: "18"
+    },
+    {
+      name: "Work2",
+      time: "3"
+    },
+    {
+      name: "break1",
+      time: "3"
+    });
+    this.name = this.pattern[this.position]['name'];
+    this.time = this.pattern[this.position]["time"];
   }
 };
 </script>
