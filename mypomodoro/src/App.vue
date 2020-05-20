@@ -4,7 +4,7 @@
     <button v-on:click="startTimer" v-if="state == 'stop' || state == 'finish'">start</button>
     <button v-on:click="startTimer" v-if="state == 'pause'">restart</button>
     <button v-on:click="pauseTimer" v-if="state == 'process'">pause</button>
-    <button v-on:click="stopTimer" v-if="state == 'pause' || state == 'finish'">finish</button>
+    <button v-on:click="stopTimer" v-if="state == 'pause' || state == 'finish'">reset</button>
   </div>
 </template>
 
@@ -27,13 +27,14 @@ export default {
     startTimer: function() {
       this.state = "process";
       this.name = this.pattern[this.position]['name'];
+      this.time = this.pattern[this.position]["time"];
       this.$refs.timer.startTimer();
     },
     stopTimer: function() {
       this.state = "stop";
       this.position = 0
-      this.name = this.pattern[this.position]['name'];
-      this.time = this.pattern[this.position]["time"];
+      this.name = this.pattern[0]['name'];
+      this.time = this.pattern[0]["time"];
       this.$refs.timer.stopTimer();
     },
     pauseTimer: function() {
@@ -46,7 +47,6 @@ export default {
       if(this.position >= this.pattern.length){
           this.position = 0
       }
-      this.time = this.pattern[this.position]["time"];
     }
   },
   created: function() {
@@ -56,7 +56,7 @@ export default {
     },
     {
       name: "Work2",
-      time: "10"
+      time: "15"
     },
     {
       name: "break1",
