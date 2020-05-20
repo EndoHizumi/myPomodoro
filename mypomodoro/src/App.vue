@@ -52,15 +52,15 @@ export default {
   created: function() {
     this.pattern.push({
       name: "Work1",
-      time: "18"
+      time: "10"
     },
     {
       name: "Work2",
-      time: "3"
+      time: "10"
     },
     {
       name: "break1",
-      time: "3"
+      time: "5"
     });
     this.name = this.pattern[this.position]['name'];
     this.time = this.pattern[this.position]["time"];
