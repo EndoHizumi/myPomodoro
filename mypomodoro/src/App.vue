@@ -117,15 +117,11 @@ export default {
       data: [
         {
           name: "Work1",
-          time: "10"
-        },
-        {
-          name: "Work2",
-          time: "15"
+          time: "1800"
         },
         {
           name: "break1",
-          time: "5"
+          time: "300"
         }
       ]
     });
