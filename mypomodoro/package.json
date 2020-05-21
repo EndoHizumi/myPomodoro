@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "core-js": "^3.6.4",
+    "material-design-icons-iconfont": "^5.0.1",
     "vue": "^2.6.11",
     "vue-awesome-countdown": "^1.0.26",
     "vuetify": "^2.2.29"
