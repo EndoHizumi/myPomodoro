@@ -6,10 +6,10 @@
           <v-toolbar-title>my Pomodoro</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn icon disable>
-            <v-icon large>mdi-help-circle</v-icon>
+            <v-icon >mdi-help-circle</v-icon>
           </v-btn>
           <v-btn icon href="https://github.com/EndoHizumi/myPomodoro/tree/develop">
-            <v-icon large>mdi-github</v-icon>
+            <v-icon>mdi-github</v-icon>
           </v-btn>
         </v-app-bar>
       </div>
