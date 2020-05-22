@@ -1,8 +1,7 @@
 FROM node
-RUN git clone -b develop https://github.com/EndoHizumi/myPomodoro.git
-WORKDIR /myPomodoro/mypomodoro/
-
+COPY ./mypomodoro /mypomodoro
+WORKDIR /mypomodoro
 RUN npm install && npm update && npm run build
 RUN npm install -g http-server
-WORKDIR /myPomodoro/mypomodoro/dist
-RUN http-server
+WORKDIR /mypomodoro/dist
+CMD [ "http-server" ] 
