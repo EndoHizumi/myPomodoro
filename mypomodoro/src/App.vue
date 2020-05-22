@@ -135,11 +135,23 @@ export default {
   methods: {
     startTimer: function() {
       this.state = "process";
+      let postion_data = this.pattern[this.group]["data"][this.position];
+      this.name = postion_data["name"];
+      this.time =
+        postion_data.hour * 3600 +
+        postion_data.minute * 60 +
+        parseInt(postion_data.second);
       this.$refs.timer.startTimer();
     },
     stopTimer: function() {
       this.state = "stop";
       this.position = 0;
+      let postion_data = this.pattern[this.group]["data"][this.position];
+      this.name = postion_data["name"];
+      this.time =
+        postion_data.hour * 3600 +
+        postion_data.minute * 60 +
+        parseInt(postion_data.second);
       this.$refs.timer.stopTimer();
     },
     pauseTimer: function() {
@@ -150,7 +162,7 @@ export default {
       this.state = "finish";
       this.position += 1;
       if (
-        this.position >= this.pattern[this.group]["data"][this.position].length
+        this.position >= this.pattern[this.group]["data"].length
       ) {
         this.position = 0;
       }
