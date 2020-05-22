@@ -4,7 +4,7 @@
     <span
       id="timer"
       v-bind:class="state"
-    >{{this.display_hour}}:{{this.display_minute}}:{{this.display_second}}</span>
+    >{{this.display_time}}</span>
   </div>
 </template>
 <script>
@@ -21,20 +21,15 @@ export default {
     startTime: String
   },
   computed: {
-    display_hour: function() {
-      let hour = Math.floor(this.pickTime / 3600);
-      return this.zeroPadding(hour);
+    display_time: function() {
+      let input = this.pickTime
+      let hour = this.zeroPadding(Math.floor(input / 3600));
+      input %= 3600 
+      let minute = this.zeroPadding(Math.floor(input / 60));
+      input %= 60 
+      let second = this.zeroPadding(input);
+      return hour+":"+minute+":"+second
     },
-    display_minute: function() {
-      let minute = Math.floor(this.pickTime / 60);
-      return this.zeroPadding(minute);
-    },
-    display_second: function() {
-      let second = Math.floor(
-        this.pickTime - (this.display_hour * 3600 + this.display_minute * 60)
-      );
-      return this.zeroPadding(second);
-    }
   },
   watch: {
     startTime: function() {
