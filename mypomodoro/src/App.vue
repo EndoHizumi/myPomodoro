@@ -98,7 +98,7 @@
           <div class="group_volume">
             <v-btn
               v-bind:disabled="state == 'process' || state == 'pause'"
-              v-on:click="pattern[group]['data'].push({name:'task',time:'0'})"
+              v-on:click="pattern[group]['data'].push({name:'task',hour:'0',minute:'0',second:'0'})"
             >
               <v-icon>mdi-plus</v-icon>
             </v-btn>
