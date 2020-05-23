@@ -10,7 +10,8 @@ export default {
   data: function() {
     return {
       timer: null,
-      pickTime: 0
+      pickTime: 0,
+      vibrate: null
     };
   },
   props: {
@@ -20,14 +21,14 @@ export default {
   },
   computed: {
     display_time: function() {
-      let input = this.pickTime
+      let input = this.pickTime;
       let hour = this.zeroPadding(Math.floor(input / 3600));
-      input %= 3600 
+      input %= 3600;
       let minute = this.zeroPadding(Math.floor(input / 60));
-      input %= 60 
+      input %= 60;
       let second = this.zeroPadding(input);
-      return hour+":"+minute+":"+second
-    },
+      return hour + ":" + minute + ":" + second;
+    }
   },
   watch: {
     startTime: function() {
@@ -36,9 +37,11 @@ export default {
     state: function() {
       if (this.state == "finish") {
         document.getElementById("alarm").play();
+        this.vibrate = setInterval(() => navigator.vibrate([200, 100, 200, 100, 200, 100]), 900);
       }else{
         let audio = document.getElementById("alarm");
         audio.pause();
+        clearInterval(this.vibrate)
         audio.currentTime = 0;
       }
     }
