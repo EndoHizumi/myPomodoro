@@ -82,15 +82,15 @@ export default {
 
 <style>
 #name {
-  display: inline-block;
+  display: block;
   font-weight: bold;
   font-size: 300%;
 }
 
 #timer {
   font-weight: bold;
-  font-size: 600%;
-  display: inline-block;
+  font-size: 500%;
+  display: block;
 }
 
 @keyframes blink {
