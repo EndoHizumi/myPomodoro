@@ -1,10 +1,8 @@
 <template>
   <div id="display">
     <span id="name">{{this.name}}</span>
-    <span
-      id="timer"
-      v-bind:class="state"
-    >{{this.display_time}}</span>
+    <span id="timer" v-bind:class="state">{{this.display_time}}</span>
+    <audio id="alarm" src="./sound/pager.mp3" loop></audio>
   </div>
 </template>
 <script>
@@ -34,6 +32,15 @@ export default {
   watch: {
     startTime: function() {
       this.pickTime = parseInt(this.startTime);
+    },
+    state: function() {
+      if (this.state == "finish") {
+        document.getElementById("alarm").play();
+      }else{
+        let audio = document.getElementById("alarm");
+        audio.pause();
+        audio.currentTime = 0;
+      }
     }
   },
   mounted: function() {
