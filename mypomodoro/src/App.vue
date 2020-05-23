@@ -180,26 +180,31 @@ export default {
         element.minute = 0;
         element.hour = parseInt(Math.abs(element.hour)) + 1;
       }
+      localStorage.setItem("timer_pattern", JSON.stringify(this.pattern));
     }
   },
   created: function() {
-    this.pattern.push({
-      name: "time1",
-      data: [
-        {
-          name: "Work1",
-          hour: "0",
-          minute: "30",
-          second: "0"
-        },
-        {
-          name: "break1",
-          hour: "0",
-          minute: "5",
-          second: "0"
-        }
-      ]
-    });
+    let timer_pattern = JSON.parse(localStorage.getItem("timer_pattern"));
+    if (timer_pattern == null) {
+      timer_pattern = {
+        name: "time1",
+        data: [
+          {
+            name: "Work1",
+            hour: "0",
+            minute: "30",
+            second: "0"
+          },
+          {
+            name: "break1",
+            hour: "0",
+            minute: "5",
+            second: "0"
+          }
+        ]
+      };
+    }
+    this.pattern = timer_pattern
     let postion_data = this.pattern[this.group]["data"][this.position];
     this.name = postion_data["name"];
     this.time =
