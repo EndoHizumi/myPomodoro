@@ -161,17 +161,16 @@ export default {
     next: function() {
       this.state = "finish";
       this.position += 1;
-      if (
-        this.position >= this.pattern[this.group]["data"].length
-      ) {
+      if (this.position >= this.pattern[this.group]["data"].length) {
         this.position = 0;
       }
     },
     onChange: function(element) {
-      
       this.name = element.name;
       this.time =
-        Math.abs(element.hour) * 3600 + Math.abs(element.minute) * 60 + Math.abs(parseInt(element.second));
+        Math.abs(element.hour) * 3600 +
+        Math.abs(element.minute) * 60 +
+        Math.abs(parseInt(element.second));
       if (Math.abs(element.second) > 59) {
         element.minute = parseInt(Math.abs(element.minute)) + 1;
         element.second = 0;
@@ -184,27 +183,33 @@ export default {
     }
   },
   created: function() {
-    let timer_pattern = JSON.parse(localStorage.getItem("timer_pattern"));
+    var timer_pattern = JSON.parse(localStorage.getItem("timer_pattern"));
+    console.log(timer_pattern);
     if (timer_pattern == null) {
-      timer_pattern = {
-        name: "time1",
-        data: [
+      console.log("timer_pattern is null");
+
+      timer_pattern = [
           {
-            name: "Work1",
-            hour: "0",
-            minute: "30",
-            second: "0"
-          },
-          {
-            name: "break1",
-            hour: "0",
-            minute: "5",
-            second: "0"
+            name: "time1",
+            data: [
+              {
+                name: "Work1",
+                hour: "0",
+                minute: "30",
+                second: "0"
+              },
+              {
+                name: "break1",
+                hour: "0",
+                minute: "5",
+                second: "0"
+              }
+            ]
           }
         ]
-      };
     }
-    this.pattern = timer_pattern
+    console.log(timer_pattern);
+    this.pattern = timer_pattern;
     let postion_data = this.pattern[this.group]["data"][this.position];
     this.name = postion_data["name"];
     this.time =

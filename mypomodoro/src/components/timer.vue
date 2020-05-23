@@ -48,6 +48,7 @@ export default {
   },
   mounted: function() {
     this.pickTime = parseInt(this.startTime);
+    navigator.vibrate(1);
   },
   methods: {
     startTimer: function() {
