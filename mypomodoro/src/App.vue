@@ -123,7 +123,25 @@ export default {
     return {
       state: "stop",
       time: "00",
-      pattern: [],
+      pattern: [
+          {
+            name: "time1",
+            data: [
+              {
+                name: "Work1",
+                hour: "0",
+                minute: "30",
+                second: "0"
+              },
+              {
+                name: "break1",
+                hour: "0",
+                minute: "5",
+                second: "0"
+              }
+            ]
+          }
+        ],
       position: 0,
       group: 0,
       tab: null
@@ -183,32 +201,9 @@ export default {
   },
   created: function() {
     var timer_pattern = JSON.parse(localStorage.getItem("timer_pattern"));
-    console.log(timer_pattern);
-    if (timer_pattern == null) {
-      console.log("timer_pattern is null");
-
-      timer_pattern = [
-          {
-            name: "time1",
-            data: [
-              {
-                name: "Work1",
-                hour: "0",
-                minute: "30",
-                second: "0"
-              },
-              {
-                name: "break1",
-                hour: "0",
-                minute: "5",
-                second: "0"
-              }
-            ]
-          }
-        ]
+    if (timer_pattern != null) {
+      this.pattern = timer_pattern;
     }
-    console.log(timer_pattern);
-    this.pattern = timer_pattern;
     let postion_data = this.pattern[this.group]["data"][this.position];
     this.name = postion_data["name"];
     this.time =
