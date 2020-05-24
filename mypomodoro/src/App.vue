@@ -3,7 +3,7 @@
     <v-app id="inspire">
       <div id="header">
         <v-app-bar color="white-somoke  flat dense" dense dark>
-          <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
+          <v-app-bar-nav-icon v-on:click="draw = true"></v-app-bar-nav-icon>
           <v-toolbar-title>my Pomodoro Timer</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn icon disable>
@@ -13,9 +13,41 @@
             <v-icon>mdi-github</v-icon>
           </v-btn>
         </v-app-bar>
+        <v-navigation-drawer width="250" v-model="draw" fixed temporary>
+          <v-list>
+            <v-list-item-group>
+              <v-list-item>
+                <v-list-item-icon @click="draw = false">
+                  <v-icon>mdi-menu</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>my Pomodoro Timer</v-list-item-content>
+              </v-list-item>
+              <v-divider></v-divider>
+              <v-list-item disabled>
+                <v-list-item-icon>
+                  <v-icon>mdi-import</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>Import Setting</v-list-item-content>
+              </v-list-item>
+              <v-list-item disabled>
+                <v-list-item-icon>
+                  <v-icon>mdi-export</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>Export Setting</v-list-item-content>
+              </v-list-item>
+              <v-list-item @click="clearSetting()">
+                <v-list-item-icon>
+                  <v-icon>mdi-playlist-remove</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>Clear Setting</v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+        </v-navigation-drawer>
       </div>
       <v-content>
         <v-container fluid>
+          <v-alert dismissible :value="alert_visible" type="success">{{alert_value}}</v-alert>
           <timer
             v-bind:name="name"
             v-bind:startTime="time"
@@ -125,27 +157,32 @@ export default {
       state: "stop",
       time: "00",
       pattern: [
-          {
-            name: "time1",
-            data: [
-              {
-                name: "Work1",
-                hour: "0",
-                minute: "30",
-                second: "0"
-              },
-              {
-                name: "break1",
-                hour: "0",
-                minute: "5",
-                second: "0"
-              }
-            ]
-          }
-        ],
+        {
+          name: "time1",
+          data: [
+            {
+              name: "Work1",
+              hour: "0",
+              minute: "30",
+              second: "0"
+            },
+            {
+              name: "break1",
+              hour: "0",
+              minute: "5",
+              second: "0"
+            }
+          ]
+        }
+      ],
       position: 0,
       group: 0,
-      tab: null
+      tab: null,
+      draw: false,
+      alert: null,
+      alert_visible: false,
+      alert_state: "success",
+      alert_value:""
     };
   },
   components: {
@@ -198,10 +235,17 @@ export default {
         element.hour = parseInt(Math.abs(element.hour)) + 1;
         element.minute = element.minute - 60;
       }
+    },
+    clearSetting: function() {
+      localStorage.clear();
+      this.draw = false;
+      this.alert_value="clear your setting"
+      this.alert_visible=true
+      this.alert_state="success"
     }
   },
   created: function() {
-    this.$ga.page('/')
+    this.$ga.page("/");
     var timer_pattern = JSON.parse(localStorage.getItem("timer_pattern"));
     if (timer_pattern != null) {
       this.pattern = timer_pattern;
@@ -213,15 +257,13 @@ export default {
       postion_data.minute * 60 +
       parseInt(postion_data.second);
   },
-  watch:{
-    pattern:{
-      handler:function(){
+  watch: {
+    pattern: {
+      handler: function() {
         localStorage.setItem("timer_pattern", JSON.stringify(this.pattern));
-        console.log("watch:pattern")
-        console.log(localStorage)
       },
-      deep:true
-    },
+      deep: true
+    }
   }
 };
 </script>
