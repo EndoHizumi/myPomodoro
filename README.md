@@ -50,22 +50,26 @@ URL： [https://mypomodorotimer.netlify.app/](https://mypomodorotimer.netlify.ap
 タイマーは動いていません。この状態でのみ設定を変更できます。
 ボタンは開始ボタンの1つしか表示されていません。
 ボタンを押すことで、カウントダウンが始まり、稼働状態に移行します。
+
 ![image.png](./picture/state_stop.png)
 
 ### タイマー稼働状態
+
 カウントダウン中です。
 ボタンは一時停止ボタンの1つしか表示されていません。
 ボタンを押すことで、カウントダウンが止まり、一時停止状態に移行します。
 ![image.png](./picture/state_pause.png)
 
-タイマー一時停止状態
+### タイマー一時停止状態
+
 一時停止中です。
 ボタンは再開と停止ボタンの2つしか表示されていません。
 再開ボタンを押すことで、カウントダウンが再開され、タイマー稼働状態に移行します。
 停止ボタンを押すことで、カウントダウンは中止され、タイマー停止状態に移行します。タイマーの名前と時間は、設定の一番上に設定されます。
 ![image.png](./picture/state_pause.png)
 
-タイマー終了状態
+### タイマー終了状態
+
 カウントダウンが終了しました。
 終了したことを、アラーム音声で知らせます。
 スマートフォンの場合、加えて振動でカウントダウン終了を知らせます。
@@ -73,4 +77,13 @@ URL： [https://mypomodorotimer.netlify.app/](https://mypomodorotimer.netlify.ap
 ![image.png](./picture/state_finish.png)
 
 ## オンプレミス環境でのセットアップ方法
+
+Dockerfileを、ビルドすることで、ローカル環境またはオンプレミス環境で、my Pomodoro Timerを動かすことができます。
+
+```bash
+$ git clone https://github.com/EndoHizumi/myPomodoro.git
+$ cd mypomodoro
+$ docker build -t my_pomodoro:latest .
+$ docker run -p 8080:8080 --rm --name mypomodoro  my_pomodoro
+```
 
