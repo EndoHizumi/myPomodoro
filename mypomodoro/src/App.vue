@@ -3,12 +3,13 @@
     <v-app id="inspire">
       <div id="header">
         <v-app-bar color="white-somoke  flat dense" dense dark>
+          <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
           <v-toolbar-title>my Pomodoro Timer</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn icon disable>
             <v-icon>mdi-help-circle</v-icon>
           </v-btn>
-          <v-btn icon href="https://github.com/EndoHizumi/myPomodoro/tree/develop">
+          <v-btn icon href="https://github.com/EndoHizumi/myPomodoro">
             <v-icon>mdi-github</v-icon>
           </v-btn>
         </v-app-bar>
