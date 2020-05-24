@@ -3,7 +3,7 @@
     <v-app id="inspire">
       <div id="header">
         <v-app-bar color="white-somoke  flat dense" dense dark>
-          <v-toolbar-title>my Pomodoro</v-toolbar-title>
+          <v-toolbar-title>my Pomodoro Timer</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn icon disable>
             <v-icon>mdi-help-circle</v-icon>
