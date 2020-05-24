@@ -173,13 +173,12 @@ export default {
         Math.abs(parseInt(element.second));
       if (Math.abs(element.second) > 59) {
         element.minute = parseInt(Math.abs(element.minute)) + 1;
-        element.second = 0;
+        element.second = element.second - 60;
       }
       if (Math.abs(element.minute) > 59) {
-        element.minute = 0;
         element.hour = parseInt(Math.abs(element.hour)) + 1;
+        element.minute = element.minute - 60;
       }
-      localStorage.setItem("timer_pattern", JSON.stringify(this.pattern));
     }
   },
   created: function() {
