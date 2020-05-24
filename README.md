@@ -52,7 +52,7 @@ URL： [https://mypomodorotimer.netlify.app/](https://mypomodorotimer.netlify.ap
 ボタンを押すことで、カウントダウンが始まり、稼働状態に移行します。
 ![image.png](./picture/state_stop.png)
 
-タイマー稼働状態
+### タイマー稼働状態
 カウントダウン中です。
 ボタンは一時停止ボタンの1つしか表示されていません。
 ボタンを押すことで、カウントダウンが止まり、一時停止状態に移行します。
