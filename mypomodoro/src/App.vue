@@ -200,6 +200,7 @@ export default {
     }
   },
   created: function() {
+    this.$ga.page('/')
     var timer_pattern = JSON.parse(localStorage.getItem("timer_pattern"));
     if (timer_pattern != null) {
       this.pattern = timer_pattern;
