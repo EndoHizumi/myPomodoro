@@ -216,6 +216,16 @@ export default {
       postion_data.hour * 3600 +
       postion_data.minute * 60 +
       parseInt(postion_data.second);
+  },
+  watch:{
+    pattern:{
+      handler:function(){
+        localStorage.setItem("timer_pattern", JSON.stringify(this.pattern));
+        console.log("watch:pattern")
+        console.log(localStorage)
+      },
+      deep:true
+    },
   }
 };
 </script>
