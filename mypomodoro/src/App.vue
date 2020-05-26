@@ -38,8 +38,8 @@
         <v-navigation-drawer width="250" v-model="draw" fixed temporary>
           <v-list>
             <v-list-item-group>
-              <v-list-item>
-                <v-list-item-icon @click="draw = false">
+              <v-list-item v-on:click="draw = false">
+                <v-list-item-icon>
                   <v-icon>mdi-menu</v-icon>
                 </v-list-item-icon>
                 <v-list-item-content>my Pomodoro Timer</v-list-item-content>
@@ -119,7 +119,7 @@
                         type="number"
                         name="number"
                         label="hour"
-                        min=0
+                        min="0"
                         v-model="element.hour"
                         v-on:input="onChange(element)"
                       />
@@ -131,7 +131,7 @@
                         type="number"
                         name="number"
                         label="minute"
-                        min=0
+                        min="0"
                         v-model="element.minute"
                         v-on:input="onChange(element)"
                       />
@@ -143,7 +143,7 @@
                         type="number"
                         name="number"
                         label="second"
-                        min=0
+                        min="0"
                         v-model="element.second"
                         v-on:input="onChange(element)"
                       />
