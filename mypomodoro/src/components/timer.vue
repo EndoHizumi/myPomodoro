@@ -17,7 +17,8 @@ export default {
   props: {
     name: String,
     state: String,
-    startTime: String
+    startTime: String,
+    volume: String
   },
   computed: {
     display_time: function() {
@@ -44,10 +45,14 @@ export default {
         clearInterval(this.vibrate)
         audio.currentTime = 0;
       }
+    },
+    volume: function(){
+      document.getElementById("alarm").volume=this.volume/100;
     }
   },
   mounted: function() {
     this.pickTime = parseInt(this.startTime);
+    document.getElementById("alarm").volume=this.volume;
     navigator.vibrate(1);
   },
   methods: {

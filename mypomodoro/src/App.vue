@@ -6,6 +6,28 @@
           <v-app-bar-nav-icon v-on:click="draw = true"></v-app-bar-nav-icon>
           <v-toolbar-title>my Pomodoro Timer</v-toolbar-title>
           <v-spacer></v-spacer>
+          <v-menu offset-y :close-on-content-click="false">
+            <template v-slot:activator="{ on }">
+              <v-btn icon slot="activator" v-on="on">
+                <v-icon>{{volume_icon}}</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-tile>
+                <v-list-tile-title>
+                  {{volume}}
+                  <v-text-field
+                    name="name"
+                    id="id"
+                    type="range"
+                    v-model="volume"
+                    v-on:input="pattern[group]['volume'] = volume"
+                    width="150"
+                  ></v-text-field>
+                </v-list-tile-title>
+              </v-list-tile>
+            </v-list>
+          </v-menu>
           <v-btn icon disable>
             <v-icon>mdi-help-circle</v-icon>
           </v-btn>
@@ -52,6 +74,7 @@
             v-bind:name="name"
             v-bind:startTime="time"
             v-bind:state="state"
+            v-bind:volume="volume"
             ref="timer"
             v-on:finish="next"
           ></timer>
@@ -162,6 +185,7 @@ export default {
       pattern: [
         {
           name: "time1",
+          volume: "100",
           data: [
             {
               name: "Work1",
@@ -185,7 +209,15 @@ export default {
       alert: null,
       alert_visible: false,
       alert_state: "success",
-      alert_value: ""
+      alert_value: "",
+      volume_draw: false,
+      volume: "0",
+      volume_level_icons: {
+        high: "mdi-volume-high",
+        medium: "mdi-volume-medium",
+        low: "mdi-volume-low",
+        mute: "mdi-volume-off"
+      }
     };
   },
   components: {
@@ -282,6 +314,22 @@ export default {
       postion_data.hour * 3600 +
       postion_data.minute * 60 +
       parseInt(postion_data.second);
+    this.volume = this.pattern[this.group]["volume"]  ? this.pattern[this.group]["volume"] : "100"
+  },
+  computed: {
+    volume_icon: function() {
+      let volume_level = "";
+      if (this.volume >= 70) {
+        volume_level = "high";
+      } else if (this.volume >= 50) {
+        volume_level = "medium";
+      } else if (this.volume < 50 && this.volume > 0) {
+        volume_level = "low";
+      } else if (this.volume <= 0) {
+        volume_level = "mute";
+      }
+      return this.volume_level_icons[volume_level];
+    }
   },
   watch: {
     pattern: {
