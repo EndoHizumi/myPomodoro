@@ -6,6 +6,28 @@
           <v-app-bar-nav-icon v-on:click="draw = true"></v-app-bar-nav-icon>
           <v-toolbar-title>my Pomodoro Timer</v-toolbar-title>
           <v-spacer></v-spacer>
+          <v-menu offset-y :close-on-content-click="false">
+            <template v-slot:activator="{ on }">
+              <v-btn icon slot="activator" v-on="on">
+                <v-icon>{{volume_icon}}</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-tile>
+                <v-list-tile-title>
+                  {{volume}}
+                  <v-text-field
+                    name="name"
+                    id="id"
+                    type="range"
+                    v-model="volume"
+                    v-on:input="pattern[group]['volume'] = volume"
+                    width="150"
+                  ></v-text-field>
+                </v-list-tile-title>
+              </v-list-tile>
+            </v-list>
+          </v-menu>
           <v-btn icon disable>
             <v-icon>mdi-help-circle</v-icon>
           </v-btn>
@@ -16,26 +38,26 @@
         <v-navigation-drawer width="250" v-model="draw" fixed temporary>
           <v-list>
             <v-list-item-group>
-              <v-list-item>
-                <v-list-item-icon @click="draw = false">
+              <v-list-item v-on:click="draw = false">
+                <v-list-item-icon>
                   <v-icon>mdi-menu</v-icon>
                 </v-list-item-icon>
                 <v-list-item-content>my Pomodoro Timer</v-list-item-content>
               </v-list-item>
               <v-divider></v-divider>
-              <v-list-item disabled>
+              <v-list-item v-on:click="importSetting()">
                 <v-list-item-icon>
                   <v-icon>mdi-import</v-icon>
                 </v-list-item-icon>
                 <v-list-item-content>Import Setting</v-list-item-content>
               </v-list-item>
-              <v-list-item disabled>
+              <v-list-item v-on:click="exportSetting()">
                 <v-list-item-icon>
                   <v-icon>mdi-export</v-icon>
                 </v-list-item-icon>
                 <v-list-item-content>Export Setting</v-list-item-content>
               </v-list-item>
-              <v-list-item @click="clearSetting()">
+              <v-list-item v-on:click="clearSetting()">
                 <v-list-item-icon>
                   <v-icon>mdi-playlist-remove</v-icon>
                 </v-list-item-icon>
@@ -52,6 +74,7 @@
             v-bind:name="name"
             v-bind:startTime="time"
             v-bind:state="state"
+            v-bind:volume="volume"
             ref="timer"
             v-on:finish="next"
           ></timer>
@@ -96,6 +119,7 @@
                         type="number"
                         name="number"
                         label="hour"
+                        min="0"
                         v-model="element.hour"
                         v-on:input="onChange(element)"
                       />
@@ -107,6 +131,7 @@
                         type="number"
                         name="number"
                         label="minute"
+                        min="0"
                         v-model="element.minute"
                         v-on:input="onChange(element)"
                       />
@@ -118,6 +143,7 @@
                         type="number"
                         name="number"
                         label="second"
+                        min="0"
                         v-model="element.second"
                         v-on:input="onChange(element)"
                       />
@@ -159,6 +185,7 @@ export default {
       pattern: [
         {
           name: "time1",
+          volume: "100",
           data: [
             {
               name: "Work1",
@@ -182,7 +209,15 @@ export default {
       alert: null,
       alert_visible: false,
       alert_state: "success",
-      alert_value:""
+      alert_value: "",
+      volume_draw: false,
+      volume: "0",
+      volume_level_icons: {
+        high: "mdi-volume-high",
+        medium: "mdi-volume-medium",
+        low: "mdi-volume-low",
+        mute: "mdi-volume-off"
+      }
     };
   },
   components: {
@@ -236,12 +271,47 @@ export default {
         element.minute = element.minute - 60;
       }
     },
+    exportSetting: function() {
+      var blob = new Blob([JSON.stringify(this.pattern)], {
+        type: "application/json"
+      });
+      var filename = "timer_pattern.json";
+      var link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+    },
+    importSetting: function() {
+      const file = document.createElement("input");
+      file.type = "file";
+      file.accept = ".json";
+      file.click();
+      file.onchange = () => {
+        console.log(file.files[0]);
+        // validate
+
+        // load to this.pattern
+        const reader = new FileReader();
+        reader.onload = e => {
+          this.pattern = JSON.parse(e.target.result);
+          this.draw = false
+          let postion_data = this.pattern[this.group]["data"][this.position];
+          this.name = postion_data["name"];
+          this.time =
+            postion_data.hour * 3600 +
+            postion_data.minute * 60 +
+            parseInt(postion_data.second);
+          this.volume = this.pattern[this.group]["volume"];
+        };
+        reader.readAsText(file.files[0]);
+      };
+    },
     clearSetting: function() {
       localStorage.clear();
       this.draw = false;
-      this.alert_value="clear your setting"
-      this.alert_visible=true
-      this.alert_state="success"
+      this.alert_value = "clear your setting";
+      this.alert_visible = true;
+      this.alert_state = "success";
     }
   },
   created: function() {
@@ -256,6 +326,22 @@ export default {
       postion_data.hour * 3600 +
       postion_data.minute * 60 +
       parseInt(postion_data.second);
+    this.volume = this.pattern[this.group]["volume"]  ? this.pattern[this.group]["volume"] : "100"
+  },
+  computed: {
+    volume_icon: function() {
+      let volume_level = "";
+      if (this.volume >= 70) {
+        volume_level = "high";
+      } else if (this.volume >= 50) {
+        volume_level = "medium";
+      } else if (this.volume < 50 && this.volume > 0) {
+        volume_level = "low";
+      } else if (this.volume <= 0) {
+        volume_level = "mute";
+      }
+      return this.volume_level_icons[volume_level];
+    }
   },
   watch: {
     pattern: {
