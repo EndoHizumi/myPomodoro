@@ -279,20 +279,32 @@ export default {
       var link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
       link.download = filename;
-      link.click()
+      link.click();
     },
-    importSetting: function(){
-      const file = document.createElement("input")
-      file.type = "file"
-      file.accept = ".json"
-      file.click()
+    importSetting: function() {
+      const file = document.createElement("input");
+      file.type = "file";
+      file.accept = ".json";
+      file.click();
       file.onchange = () => {
-        console.log(file.files[0])
+        console.log(file.files[0]);
         // validate
-        
-        // load to this.pattern
 
-      }
+        // load to this.pattern
+        const reader = new FileReader();
+        reader.onload = e => {
+          this.pattern = JSON.parse(e.target.result);
+          this.draw = false
+          let postion_data = this.pattern[this.group]["data"][this.position];
+          this.name = postion_data["name"];
+          this.time =
+            postion_data.hour * 3600 +
+            postion_data.minute * 60 +
+            parseInt(postion_data.second);
+          this.volume = this.pattern[this.group]["volume"];
+        };
+        reader.readAsText(file.files[0]);
+      };
     },
     clearSetting: function() {
       localStorage.clear();
