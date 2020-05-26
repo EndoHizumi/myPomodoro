@@ -23,19 +23,19 @@
                 <v-list-item-content>my Pomodoro Timer</v-list-item-content>
               </v-list-item>
               <v-divider></v-divider>
-              <v-list-item disabled>
+              <v-list-item v-on:click="importSetting()">
                 <v-list-item-icon>
                   <v-icon>mdi-import</v-icon>
                 </v-list-item-icon>
                 <v-list-item-content>Import Setting</v-list-item-content>
               </v-list-item>
-              <v-list-item disabled>
+              <v-list-item v-on:click="exportSetting()">
                 <v-list-item-icon>
                   <v-icon>mdi-export</v-icon>
                 </v-list-item-icon>
                 <v-list-item-content>Export Setting</v-list-item-content>
               </v-list-item>
-              <v-list-item @click="clearSetting()">
+              <v-list-item v-on:click="clearSetting()">
                 <v-list-item-icon>
                   <v-icon>mdi-playlist-remove</v-icon>
                 </v-list-item-icon>
@@ -96,6 +96,7 @@
                         type="number"
                         name="number"
                         label="hour"
+                        min=0
                         v-model="element.hour"
                         v-on:input="onChange(element)"
                       />
@@ -107,6 +108,7 @@
                         type="number"
                         name="number"
                         label="minute"
+                        min=0
                         v-model="element.minute"
                         v-on:input="onChange(element)"
                       />
@@ -118,6 +120,7 @@
                         type="number"
                         name="number"
                         label="second"
+                        min=0
                         v-model="element.second"
                         v-on:input="onChange(element)"
                       />
@@ -182,7 +185,7 @@ export default {
       alert: null,
       alert_visible: false,
       alert_state: "success",
-      alert_value:""
+      alert_value: ""
     };
   },
   components: {
@@ -236,12 +239,35 @@ export default {
         element.minute = element.minute - 60;
       }
     },
+    exportSetting: function() {
+      var blob = new Blob([JSON.stringify(this.pattern)], {
+        type: "application/json"
+      });
+      var filename = "timer_pattern.json";
+      var link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = filename;
+      link.click()
+    },
+    importSetting: function(){
+      const file = document.createElement("input")
+      file.type = "file"
+      file.accept = ".json"
+      file.click()
+      file.onchange = () => {
+        console.log(file.files[0])
+        // validate
+        
+        // load to this.pattern
+
+      }
+    },
     clearSetting: function() {
       localStorage.clear();
       this.draw = false;
-      this.alert_value="clear your setting"
-      this.alert_visible=true
-      this.alert_state="success"
+      this.alert_value = "clear your setting";
+      this.alert_visible = true;
+      this.alert_state = "success";
     }
   },
   created: function() {
