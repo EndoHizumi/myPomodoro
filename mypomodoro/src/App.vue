@@ -78,7 +78,6 @@
             ref="timer"
             v-on:finish="next"
           ></timer>
-
           <v-btn v-on:click="startTimer" v-if="state == 'stop' || state == 'finish'">
             <v-icon x-large>mdi-play</v-icon>
           </v-btn>
@@ -299,7 +298,7 @@ export default {
         const reader = new FileReader();
         reader.onload = e => {
           this.pattern = JSON.parse(e.target.result);
-          this.draw = false
+          this.draw = false;
           let postion_data = this.pattern[this.group]["data"][this.position];
           this.name = postion_data["name"];
           this.time =
@@ -318,10 +317,16 @@ export default {
     },
     clearSetting: function() {
       localStorage.clear();
+      this.showAlert("clear your setting", "success");
+    },
+    showAlert: function(message, state) {
       this.draw = false;
-      this.alert_value = "clear your setting";
+      this.alert_value = message;
       this.alert_visible = true;
-      this.alert_state = "success";
+      this.alert_state = state;
+      setTimeout(() => {
+        this.alert_visible = false;
+      }, 1000);
     }
   },
   created: function() {
