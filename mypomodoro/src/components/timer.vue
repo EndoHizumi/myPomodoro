@@ -52,7 +52,7 @@ export default {
   },
   mounted: function() {
     this.pickTime = parseInt(this.startTime);
-    document.getElementById("alarm").volume=this.volume;
+    document.getElementById("alarm").volume=this.volume/100;
     navigator.vibrate(1);
   },
   methods: {
