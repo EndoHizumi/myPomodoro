@@ -16,14 +16,7 @@
               <v-list-tile>
                 <v-list-tile-title>
                   {{volume}}
-                  <v-text-field
-                    name="name"
-                    id="id"
-                    type="range"
-                    v-model="volume"
-                    v-on:input="pattern[group]['volume'] = volume"
-                    width="150"
-                  ></v-text-field>
+                  <v-text-field name="name" id="id" type="range" v-model="volume"></v-text-field>
                 </v-list-tile-title>
               </v-list-tile>
             </v-list>
@@ -63,6 +56,13 @@
                 </v-list-item-icon>
                 <v-list-item-content>Clear Setting</v-list-item-content>
               </v-list-item>
+              <v-list-item>
+                <v-switch
+                  v-model="autoplay"
+                  label="Auto Play"
+                  v-on:change="showAlert(`AutoPlay: ${autoplay}`, 'info')"
+                ></v-switch>
+              </v-list-item>
             </v-list-item-group>
           </v-list>
         </v-navigation-drawer>
@@ -78,7 +78,6 @@
             ref="timer"
             v-on:finish="next"
           ></timer>
-
           <v-btn v-on:click="startTimer" v-if="state == 'stop' || state == 'finish'">
             <v-icon x-large>mdi-play</v-icon>
           </v-btn>
@@ -186,6 +185,7 @@ export default {
         {
           name: "time1",
           volume: "100",
+          autoplay: false,
           data: [
             {
               name: "Work1",
@@ -202,6 +202,7 @@ export default {
           ]
         }
       ],
+      autoplay: false,
       position: 0,
       group: 0,
       tab: null,
@@ -255,6 +256,9 @@ export default {
       if (this.position >= this.pattern[this.group]["data"].length) {
         this.position = 0;
       }
+      if (this.autoplay) {
+        setTimeout(this.startTimer, 500);
+      }
     },
     onChange: function(element) {
       this.name = element.name;
@@ -294,24 +298,35 @@ export default {
         const reader = new FileReader();
         reader.onload = e => {
           this.pattern = JSON.parse(e.target.result);
-          this.draw = false
+          this.draw = false;
           let postion_data = this.pattern[this.group]["data"][this.position];
           this.name = postion_data["name"];
           this.time =
             postion_data.hour * 3600 +
             postion_data.minute * 60 +
             parseInt(postion_data.second);
-          this.volume = this.pattern[this.group]["volume"];
+          this.volume = this.pattern[this.group]["volume"]
+            ? this.pattern[this.group]["volume"]
+            : "100";
+          this.autoplay = this.pattern[this.group]["autoplay"]
+            ? this.pattern[this.group]["autoplay"]
+            : false;
         };
         reader.readAsText(file.files[0]);
       };
     },
     clearSetting: function() {
       localStorage.clear();
+      this.showAlert("clear your setting", "success");
+    },
+    showAlert: function(message, state) {
       this.draw = false;
-      this.alert_value = "clear your setting";
+      this.alert_value = message;
       this.alert_visible = true;
-      this.alert_state = "success";
+      this.alert_state = state;
+      setTimeout(() => {
+        this.alert_visible = false;
+      }, 1000);
     }
   },
   created: function() {
@@ -326,7 +341,12 @@ export default {
       postion_data.hour * 3600 +
       postion_data.minute * 60 +
       parseInt(postion_data.second);
-    this.volume = this.pattern[this.group]["volume"]  ? this.pattern[this.group]["volume"] : "100"
+    this.volume = this.pattern[this.group]["volume"]
+      ? this.pattern[this.group]["volume"]
+      : "100";
+    this.autoplay = this.pattern[this.group]["autoplay"]
+      ? this.pattern[this.group]["autoplay"]
+      : false;
   },
   computed: {
     volume_icon: function() {
@@ -349,6 +369,14 @@ export default {
         localStorage.setItem("timer_pattern", JSON.stringify(this.pattern));
       },
       deep: true
+    },
+    volume: function() {
+      this.pattern[this.group]["volume"] = this.volume;
+      localStorage.setItem("timer_pattern", JSON.stringify(this.pattern));
+    },
+    autoplay: function() {
+      this.pattern[this.group]["autoplay"] = this.autoplay;
+      localStorage.setItem("timer_pattern", JSON.stringify(this.pattern));
     }
   }
 };
