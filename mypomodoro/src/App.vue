@@ -91,8 +91,19 @@
             <v-icon x-large>mdi-stop</v-icon>
           </v-btn>
 
-          <v-tabs v-model="tab" background-color="transparent" grow>
-            <v-tab v-for="item in pattern" :key="item">{{ item['name'] }}</v-tab>
+          <v-tabs v-model="tab" grow style="margin-top: 10px;">
+            <v-btn icon v-on:click="removeTab()">
+              <v-icon>mdi-minus</v-icon>
+            </v-btn>
+            <v-tab
+              v-for="item in pattern"
+              v-bind:key="item['group_id']"
+              v-on:click="groupChange(item['group_id'])"
+              v-on:dblclick="editTimerName()"
+            >{{ item['name'] }}</v-tab>
+            <v-btn icon v-on:click="appendTab()">
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
           </v-tabs>
 
           <v-tabs-items v-model="tab">
@@ -183,6 +194,7 @@ export default {
       time: "00",
       pattern: [
         {
+          group_id: 0,
           name: "time1",
           volume: "100",
           autoplay: false,
@@ -225,6 +237,12 @@ export default {
     timer
   },
   methods: {
+    editTimerName: function() {
+      this.pattern[this.group]["name"] = window.prompt(
+        "",
+        this.pattern[this.group]["name"]
+      );
+    },
     startTimer: function() {
       this.state = "process";
       let postion_data = this.pattern[this.group]["data"][this.position];
@@ -327,6 +345,42 @@ export default {
       setTimeout(() => {
         this.alert_visible = false;
       }, 1000);
+    },
+    appendTab: function() {
+      this.pattern.push({
+        group_id: this.pattern.length,
+        name: `time${this.pattern.length}`,
+        volume: "100",
+        autoplay: false,
+        data: [
+          {
+            name: "Work1",
+            hour: "0",
+            minute: "30",
+            second: "0"
+          },
+          {
+            name: "break1",
+            hour: "0",
+            minute: "5",
+            second: "0"
+          }
+        ]
+      });
+    },
+    removeTab: function() {
+      if (this.pattern.length > 1) {
+        this.pattern.pop();
+      }
+    },
+    groupChange: function(e) {
+      this.group = e;
+      let postion_data = this.pattern[this.group]["data"][this.position];
+      this.name = postion_data["name"];
+      this.time =
+        postion_data.hour * 3600 +
+        postion_data.minute * 60 +
+        parseInt(postion_data.second);
     }
   },
   created: function() {
