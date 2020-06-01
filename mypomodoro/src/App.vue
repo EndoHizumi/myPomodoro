@@ -91,7 +91,7 @@
             <v-icon x-large>mdi-stop</v-icon>
           </v-btn>
 
-          <v-tabs v-model="tab" grow>
+          <v-tabs v-model="tab" grow style="margin-top: 10px;">
             <v-btn icon v-on:click="removeTab()">
               <v-icon>mdi-minus</v-icon>
             </v-btn>
@@ -100,7 +100,7 @@
               v-bind:key="item['group_id']"
               v-on:click="groupChange(item['group_id'])"
               v-on:dblclick="editTimerName()"
-            >{{ item['name'] }}_{{item['group_id']}}</v-tab>
+            >{{ item['name'] }}</v-tab>
             <v-btn icon v-on:click="appendTab()">
               <v-icon>mdi-plus</v-icon>
             </v-btn>
@@ -194,7 +194,7 @@ export default {
       time: "00",
       pattern: [
         {
-          group_id:0,
+          group_id: 0,
           name: "time1",
           volume: "100",
           autoplay: false,
@@ -352,7 +352,7 @@ export default {
         name: `time${this.pattern.length}`,
         volume: "100",
         autoplay: false,
-        data: [ 
+        data: [
           {
             name: "Work1",
             hour: "0",
@@ -373,8 +373,14 @@ export default {
         this.pattern.pop();
       }
     },
-    groupChange: function(e){
-      this.group = e
+    groupChange: function(e) {
+      this.group = e;
+      let postion_data = this.pattern[this.group]["data"][this.position];
+      this.name = postion_data["name"];
+      this.time =
+        postion_data.hour * 3600 +
+        postion_data.minute * 60 +
+        parseInt(postion_data.second);
     }
   },
   created: function() {
